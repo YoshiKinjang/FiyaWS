@@ -7,16 +7,15 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\KategoriProdukController;
 use App\Http\Controllers\KulakanController;
+use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\JenisPengeluaranController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-    // Route::get('dashboard', function () {
-    //     return Inertia::render('dashboard');
-    // })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::middleware(['auth'])->group(function() {
@@ -47,6 +46,18 @@ Route::middleware(['auth'])->group(function() {
     // Route::delete('/kulakan/{id}', [KulakanController::class, 'destroy'])->name('kulakan.destroy');
 });
 
+Route::middleware(['auth'])->group(function() {
+    Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
+    Route::post('/pengeluaran', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+});
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/jenis-pengeluaran', [JenisPengeluaranController::class, 'index'])->name('jenis-pengeluaran.index');
+    Route::post('/jenis-pengeluaran', [JenisPengeluaranController::class, 'store'])->name('jenis-pengeluaran.store');
+    Route::put('/jenis-pengeluaran/{id}', [JenisPengeluaranController::class, 'update'])->name('jenis-pengeluaran.update');
+    Route::delete('/jenis-pengeluaran/{id}', [JenisPengeluaranController::class, 'destroy'])->name('jenis-pengeluaran.destroy');
+});

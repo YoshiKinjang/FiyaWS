@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, Box, Tag, Ruler, ShoppingCart, ArrowRightLeft, Banknote, CreditCard, FileChartColumn} from 'lucide-react';
+import { LayoutGrid, Box, Tag, Ruler, ShoppingCart, ArrowRightLeft, Banknote, CreditCard, FileChartColumn, ClipboardList} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -37,6 +37,11 @@ const mainNavItems: NavItem[] = [
         title: 'Pengeluaran',
         url: '/pengeluaran',
         icon: Banknote,
+    },
+    {
+        title: 'Jenis Pengeluaran',
+        url: '/jenis-pengeluaran',
+        icon: ClipboardList,
     },
     {
         title: 'Transaksi',
