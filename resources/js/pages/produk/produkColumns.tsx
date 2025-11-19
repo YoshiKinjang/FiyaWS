@@ -14,21 +14,31 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export type KategoriProduk = {
-    kategori_produk_id: number;
-    kategori: string;
+export type Produk = {
+    produk_id: number;
+    produk_nama: string;
+    kategori_id: number;
+    kategori_nama: string;
+    satuan_id: number;
+    satuan_nama:string;
+    harga_beli: number;
+    harga_jual: number;
+    stok: number;
+    laba: number;
+    is_deleted: boolean;
     created_at: string;
-};
-
-interface BuildColumnsProps {
-    onEdit: (row: KategoriProduk) => void;
-    onDelete: (row: KategoriProduk) => void;
+    updated_at: string;
 }
 
-export function columns({
+interface BuildColumnsProps {
+    onEdit: (row: Produk) => void;
+    onDelete: (row: Produk) => void;
+}
+
+export function produkColumns({
     onEdit,
     onDelete,
-}: BuildColumnsProps): ColumnDef<KategoriProduk>[] {
+}: BuildColumnsProps): ColumnDef<Produk>[] {
     return [
         {
             id: "no",
@@ -40,15 +50,36 @@ export function columns({
             },
         },
         {
-            accessorKey: "kategori",
+            accessorKey: "produk_nama",
+            header: "Nama Produk",
+        },
+        {
+            accessorKey: "kategori_nama",
             header: "Kategori",
         },
         {
-            accessorKey: "created_at",
-            header: "Dibuat",
+            accessorKey: "satuan_nama",
+            header: "Satuan",
         },
         {
+            accessorKey: "harga_jual",
+            header: "Harga Jual",
+            cell: ({ row }) => {
+                const value = row.original.harga_jual;
+                return `Rp ${value.toLocaleString("id-ID")}`;
+            }
+        },
+        {
+            accessorKey: "stok",
+            header: "Stok",
+        },
+        {
+            accessorKey: "laba",
+            header: "Laba %",
+        },  
+        {
             id: "actions",
+            header: "Aksi",
             cell: ({ row }) => {
                 const item = row.original;
                 return (

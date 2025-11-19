@@ -5,6 +5,7 @@ import { type BreadcrumbItem } from '@/types';
 import { formatRupiah } from '@/utility/format-rupiah';
 import { Head } from '@inertiajs/react';
 import { ArrowRight, ArrowRightLeft, Banknote, Box, CreditCard } from 'lucide-react';
+import { Produk } from './produk/produkColumns';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,6 +20,12 @@ const data = {
     total_hutang: 150000,
     jumlah_produk: 55,
 };
+
+interface Props {
+    data: Produk[];
+    pilihanKategori: { kategori_produk_id: number; kategori: string }[];
+    pilihanSatuan: { satuan_produk_id: number; satuan: string }[];
+}
 
 export default function Dashboard() {
     return (
@@ -99,7 +106,7 @@ export default function Dashboard() {
                         <CardHeader>
                             <div className='flex flex-row flex-wrap items-center justify-between'>
                                 <CardTitle className='text-lg font-medium'>Tambah produk</CardTitle>
-                                <Button variant={'outline'} size={'icon'}>
+                                <Button  variant={'outline'} size={'icon'}>
                                     <ArrowRight></ArrowRight>
                                 </Button>
 
