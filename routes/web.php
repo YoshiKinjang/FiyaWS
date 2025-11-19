@@ -9,6 +9,7 @@ use App\Http\Controllers\KategoriProdukController;
 use App\Http\Controllers\KulakanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\JenisPengeluaranController;
+use App\Http\Controllers\TransaksiController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -49,6 +50,11 @@ Route::middleware(['auth'])->group(function() {
 Route::middleware(['auth'])->group(function() {
     Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
     Route::post('/pengeluaran', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+});
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
 });
 
 
