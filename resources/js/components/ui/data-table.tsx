@@ -11,10 +11,11 @@ import * as React from "react"
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    filterKey?: string; // key untuk filter kolom
 }
 
 export function DataTable<TData, TValue>({ 
-    columns, data
+    columns, data, filterKey = ""
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -30,16 +31,17 @@ export function DataTable<TData, TValue>({
             columnFilters,
         },
     });
+    
 
     return (
         <div>
             <div className="flex items-center py-4">
         <Input
-          placeholder="Filter kategori..."
-          value={(table.getColumn("kategori")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("kategori")?.setFilterValue(event.target.value)
-          }
+          placeholder={`Filter ${filterKey ?? ""}...`}
+          value={(filterKey && table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+                filterKey && table.getColumn(filterKey)?.setFilterValue(event.target.value)
+            }
           className="max-w-sm"
         />
       </div>

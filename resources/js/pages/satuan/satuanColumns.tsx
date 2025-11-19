@@ -14,21 +14,21 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export type KategoriProduk = {
-    kategori_produk_id: number;
-    kategori: string;
+export type SatuanProduk = {
+    satuan_produk_id: number;
+    satuan: string;
     created_at: string;
-};
-
-interface BuildColumnsProps {
-    onEdit: (row: KategoriProduk) => void;
-    onDelete: (row: KategoriProduk) => void;
 }
 
-export function columns({
+interface BuildColumnsProps {
+    onEdit: (row: SatuanProduk) => void;
+    onDelete: (row: SatuanProduk) => void;
+}
+
+export function satuanColumns({
     onEdit,
     onDelete,
-}: BuildColumnsProps): ColumnDef<KategoriProduk>[] {
+}: BuildColumnsProps): ColumnDef<SatuanProduk>[] {
     return [
         {
             id: "no",
@@ -40,8 +40,8 @@ export function columns({
             },
         },
         {
-            accessorKey: "kategori",
-            header: "Kategori",
+            accessorKey: "satuan",
+            header: "satuan",
         },
         {
             accessorKey: "created_at",

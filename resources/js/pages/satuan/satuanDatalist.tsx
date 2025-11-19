@@ -20,23 +20,23 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import { DataTable } from '../../components/ui/data-table';
-import { columns, KategoriProduk } from './columns';
+import { satuanColumns, SatuanProduk } from './satuanColumns';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'List kategori produk',
-        href: '/kategori',
+        title: 'List satuan produk',
+        href: '/satuan',
     },
 ];
 
 interface Props {
-    data: KategoriProduk[];
+    data: SatuanProduk[];
 }
 
-export default function KategoriDatalist({ data }: Props) {
+export default function SatuanDatalist({ data }: Props) {
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const [selected, setSelected] = useState<KategoriProduk | null>(null);
+    const [selected, setSelected] = useState<SatuanProduk | null>(null);
 
     const {
         data: formData,
@@ -46,7 +46,7 @@ export default function KategoriDatalist({ data }: Props) {
         processing,
         reset,
     } = useForm({
-        kategori: '',
+        satuan: '',
     });
 
     const {
@@ -56,13 +56,13 @@ export default function KategoriDatalist({ data }: Props) {
         put,
         processing: editProcessing,
     } = useForm({
-        kategori: '',
+        satuan: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('kategori.store'), {
+        post(route('satuan.store'), {
             onSuccess: () => {
                 reset();
                 setOpen(false); // tutup modal otomatis
@@ -70,30 +70,30 @@ export default function KategoriDatalist({ data }: Props) {
         });
     };
 
-    function handleEdit(item: KategoriProduk) {
+    function handleEdit(item: SatuanProduk) {
         setSelected(item);
-        setEditData('kategori', item.kategori);
+        setEditData('satuan', item.satuan);
         setOpenEdit(true);
     }
 
-    function handleDelete(item: KategoriProduk) {
-        if (confirm(`Yakin ingin menghapus kategori "${item.kategori}"?`)) {
-            router.delete(route('kategori.destroy', item.kategori_produk_id));
+    function handleDelete(item: SatuanProduk) {
+        if (confirm(`Yakin ingin menghapus satuan "${item.satuan}"?`)) {
+            router.delete(route('satuan.destroy', item.satuan_produk_id));
         }
     }
 
-    const buildColumns = columns({
+    const buildColumns = satuanColumns({
         onEdit: handleEdit,
         onDelete: handleDelete,
     });
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="List Kategori Produk" />
+            <Head title="List Satuan Produk" />
             {/* <Fragment> */}
             <Dialog open={open} onOpenChange={setOpen}>
                 <div className="item s-center mx-6 mt-6 flex justify-between">
-                    <Heading title={'Kategori'} description={'Master data kategori'}></Heading>
+                    <Heading title={'Satuan'} description={'Master data satuan'}></Heading>
                     <DialogTrigger asChild>
                         <Button variant={'default'}>
                             <Plus /> Tambah baru
@@ -103,19 +103,19 @@ export default function KategoriDatalist({ data }: Props) {
                 <DialogContent>
                     <form onSubmit={submit}>
                         <DialogHeader>
-                            <DialogTitle>Buat kategori produk</DialogTitle>
-                            <DialogDescription>Buat kategori baru untuk produk warung sayur kamu. Klik save untuk menyimpan</DialogDescription>
+                            <DialogTitle>Buat Satuan produk</DialogTitle>
+                            <DialogDescription>Buat satuan baru untuk produk warung sayur kamu. Klik simpan untuk menyimpan</DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-3 py-6">
-                            <Label htmlFor="kategori-1">Nama kategori</Label>
+                            <Label htmlFor="satuan-1">Nama satuan</Label>
                             <Input
-                                id="kategori-1"
-                                name="kategori"
-                                placeholder="Sayuran..."
-                                value={formData.kategori}
-                                onChange={(e) => setData('kategori', e.target.value)}
+                                id="satuan-1"
+                                name="satuan"
+                                placeholder="kg..."
+                                value={formData.satuan}
+                                onChange={(e) => setData('satuan', e.target.value)}
                             />
-                            <InputError className="mt-2" message={errors.kategori} />
+                            <InputError className="mt-2" message={errors.satuan} />
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
@@ -124,7 +124,7 @@ export default function KategoriDatalist({ data }: Props) {
                                 </Button>
                             </DialogClose>
                             <Button type="submit" disabled={processing}>
-                                Simpan kategori
+                                Simpan satuan
                             </Button>
                         </DialogFooter>
                     </form>
@@ -138,19 +138,19 @@ export default function KategoriDatalist({ data }: Props) {
                             e.preventDefault();
                             console.log(selected);
                             if (!selected) return;
-                            put(route('kategori.update', selected.kategori_produk_id), {
+                            put(route('satuan.update', selected.satuan_produk_id), {
                                 onSuccess: () => setOpenEdit(false),
                             });
                         }}
                     >
                         <DialogHeader>
-                            <DialogTitle>Edit kategori</DialogTitle>
+                            <DialogTitle>Edit satuan</DialogTitle>
                         </DialogHeader>
 
                         <div className="grid gap-3 py-6">
-                            <Label>Nama kategori</Label>
-                            <Input value={editData.kategori} onChange={(e) => setEditData('kategori', e.target.value)} />
-                            <InputError message={editErrors.kategori} />
+                            <Label>Nama satuan</Label>
+                            <Input value={editData.satuan} onChange={(e) => setEditData('satuan', e.target.value)} />
+                            <InputError message={editErrors.satuan} />
                         </div>
 
                         <DialogFooter>
