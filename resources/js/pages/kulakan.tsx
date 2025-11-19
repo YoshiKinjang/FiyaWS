@@ -118,11 +118,6 @@ export const columns: ColumnDef<KulakanHistoryItem>[] = [
         cell: ({ row }) => <div className="text-right">{formatRupiah(row.getValue('hargaBeli'))}</div>,
     },
     {
-        accessorKey: 'hargaJual',
-        header: () => <div className="text-right">Harga Jual</div>,
-        cell: ({ row }) => <div className="text-right">{formatRupiah(row.getValue('hargaJual'))}</div>,
-    },
-    {
         accessorKey: 'subtotal',
         header: () => <div className="text-right">Subtotal</div>,
         cell: ({ row }) => <div className="text-right">{formatRupiah(row.getValue('subtotal'))}</div>,
@@ -305,21 +300,19 @@ export default function KulakanPage() {
                                                             <TableHead>Produk</TableHead>
                                                             <TableHead className="text-right">Qty</TableHead>
                                                             <TableHead className="text-right">Harga Beli</TableHead>
-                                                            <TableHead className="text-right">Harga Jual</TableHead>
                                                             <TableHead className="text-right">Subtotal</TableHead>
                                                             <TableHead className="w-20 text-center">Aksi</TableHead>
                                                         </TableRow>
                                                     </TableHeader>
                                                     <TableBody>
                                                         {items.length === 0 ? (
-                                                            <TableRow><TableCell colSpan={6} className="h-24 text-center">Belum ada item.</TableCell></TableRow>
+                                                            <TableRow><TableCell colSpan={5} className="h-24 text-center">Belum ada item.</TableCell></TableRow>
                                                         ) : (
                                                             items.map((item) => (
                                                                 <TableRow key={item.produk_id}>
                                                                     <TableCell className="font-medium">{item.nama}</TableCell>
                                                                     <TableCell className="text-right">{item.qty}</TableCell>
                                                                     <TableCell className="text-right">{formatRupiah(item.hargaBeli)}</TableCell>
-                                                                    <TableCell className="text-right">{formatRupiah(item.hargaJual)}</TableCell>
                                                                     <TableCell className="text-right">{formatRupiah(item.subtotal)}</TableCell>
                                                                     <TableCell className="text-center">
                                                                         <Button variant="ghost" size="icon" type="button" onClick={() => removeItem(item.produk_id)}>
@@ -333,7 +326,7 @@ export default function KulakanPage() {
                                                     {items.length > 0 && (
                                                         <TableFooter>
                                                             <TableRow>
-                                                                <TableCell colSpan={4} className="font-bold">Grand Total</TableCell>
+                                                                <TableCell colSpan={3} className="font-bold">Grand Total</TableCell>
                                                                 <TableCell className="text-right font-bold">{formatRupiah(grandTotal)}</TableCell>
                                                                 <TableCell></TableCell>
                                                             </TableRow>
