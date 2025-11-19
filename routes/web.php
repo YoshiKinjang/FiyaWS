@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\KategoriProdukController;
+use App\Http\Controllers\KulakanController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -40,10 +41,10 @@ Route::middleware(['auth'])->group(function() {
 });
 
 Route::middleware(['auth'])->group(function() {
-    Route::get('/kulakan', [ProdukController::class, 'index'])->name('kulakan.index');
-    Route::post('/kulakan', [ProdukController::class, 'store'])->name('kulakan.store');
-    Route::put('/kulakan/{id}', [ProdukController::class, 'update'])->name('kulakan.update');
-    Route::delete('/kulakan/{id}', [ProdukController::class, 'destroy'])->name('kulakan.destroy');
+    Route::get('/kulakan', [KulakanController::class, 'index'])->name('kulakan.index');
+    Route::post('/kulakan', [KulakanController::class, 'store'])->name('kulakan.store');
+    // Route::put('/kulakan/{id}', [KulakanController::class, 'update'])->name('kulakan.update');
+    // Route::delete('/kulakan/{id}', [KulakanController::class, 'destroy'])->name('kulakan.destroy');
 });
 
 
