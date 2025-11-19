@@ -10,6 +10,8 @@ use App\Http\Controllers\KulakanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\JenisPengeluaranController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\HutangController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -55,6 +57,15 @@ Route::middleware(['auth'])->group(function() {
 Route::middleware(['auth'])->group(function() {
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
+});
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+});
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/hutang', [HutangController::class, 'index'])->name('hutang.index');
+    Route::put('/hutang/{id}', [HutangController::class, 'update'])->name('hutang.update');
 });
 
 

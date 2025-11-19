@@ -55,10 +55,98 @@ export default function TransaksiPage() {
             {view === 'pembayaran' && (
                 <Pembayaran paymentData={paymentData} onNavigate={handleNavigate} />
             )}
-            {/* {view === 'detailhutang' && (
+            {view === 'detailhutang' && (
                 <DetailHutang debtData={debtData} onNavigate={handleNavigate} />
-            )} */}
+            )}
         </AppLayout>
+    );
+}
+
+// --- DetailHutang Component ---
+interface DetailHutangProps {
+    debtData: any;
+    onNavigate: (page: string) => void;
+}
+
+function DetailHutang({ debtData, onNavigate }: DetailHutangProps) {
+    const { post, processing, errors } = useForm({
+        ...debtData,
+        isDebt: true,
+    });
+
+    if (!debtData) {
+        return (
+            <div className="flex-1 flex items-center justify-center">
+                <p className="text-muted-foreground">Tidak ada data hutang untuk ditampilkan.</p>
+            </div>
+        );
+    }
+
+    const handleSaveDebt = () => {
+        post(route('transaksi.store'), {
+            onSuccess: () => {
+                onNavigate('kasir');
+            },
+        });
+    };
+
+    return (
+        <div className="max-w-2xl mx-auto py-6">
+            <Card>
+                <CardHeader>
+                    <div className="flex items-center gap-4">
+                        <Button onClick={() => onNavigate('kasir')} variant="outline" size="icon">
+                            <ArrowLeft size={20} />
+                        </Button>
+                        <CardTitle>Detail Hutang</CardTitle>
+                    </div>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                    {/* Generic Error Display */}
+                    {Object.keys(errors).length > 0 && (
+                        <div className="bg-destructive/10 border border-destructive text-destructive p-3 rounded-md text-sm">
+                            <p className="font-bold mb-2">Terjadi kesalahan:</p>
+                            <ul>
+                                {Object.values(errors).map((error, index) => (
+                                    <li key={index}>- {error}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    <div className="flex justify-between py-2 border-b">
+                        <span className="text-muted-foreground">Nama Pembeli:</span>
+                        <span className="font-medium">{debtData.customerName}</span>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <span className="text-muted-foreground">Item Pembelian:</span>
+                        {debtData.items.map((item: any) => (
+                            <div key={item.id} className="flex justify-between">
+                                <span>{item.nama} x{item.qty}</span>
+                                <span className="font-medium">{formatRupiah(item.subtotal)}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex justify-between items-center py-3 border-t text-lg">
+                        <span className="font-semibold">Total Hutang:</span>
+                        <span className="font-semibold">{formatRupiah(debtData.total)}</span>
+                    </div>
+                </CardContent>
+                <CardFooter className="flex flex-col gap-3">
+                    <Button onClick={handleSaveDebt} disabled={processing} className="w-full">
+                        {processing ? 'Menyimpan...' : 'Simpan Hutang'}
+                    </Button>
+                    <Button onClick={() => onNavigate('kasir')} variant="outline" className="w-full">
+                        Batal
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                        Cetak Nota
+                    </Button>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }
 
@@ -300,7 +388,6 @@ function Kasir({ products, onNavigate, setPaymentData, setDebtData }: KasirProps
     const totalBelanja = cart.reduce((sum, item) => sum + item.subtotal, 0);
 
     const handlePayment = () => {
-        setShowNameError(false);
         setPaymentData({
             items: cart,
             customerName,

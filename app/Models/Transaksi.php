@@ -21,4 +21,9 @@ class Transaksi extends Model
         'status',
         'tgl_transaksi',
     ];
+
+    public function pembayaran()
+    {
+        return $this->hasOne(Pembayaran::class, 'transaksi_id', 'transaksi_id');
+    }
 }

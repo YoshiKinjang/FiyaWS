@@ -6,6 +6,7 @@ use App\Models\Produk;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Pembayaran;
+use App\Models\Hutang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,15 +34,16 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'customerName' => ['nullable', 'string', 'max:150'],
+            'customerName' => ['required_if:isDebt,true', 'nullable', 'string', 'max:150'],
             'total' => ['required', 'integer', 'min:0'],
-            'metodePembayaran' => ['required', 'string', 'in:tunai,transfer,qris'],
-            'uangDibayar' => ['required', 'integer', 'min:0'],
+            'metodePembayaran' => ['required_if:isDebt,false', 'nullable', 'string', 'in:tunai,transfer,qris'],
+            'uangDibayar' => ['required_if:isDebt,false', 'nullable', 'integer', 'min:0'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.id' => ['required', 'exists:produk,produk_id'],
             'items.*.qty' => ['required', 'integer', 'min:1'],
             'items.*.harga_jual' => ['required', 'integer', 'min:0'],
             'items.*.subtotal' => ['required', 'integer', 'min:0'],
+            'isDebt' => ['required', 'boolean'],
         ]);
 
         DB::transaction(function () use ($data) {
@@ -50,7 +52,7 @@ class TransaksiController extends Controller
                 'user_id' => Auth::id(),
                 'pembeli' => $data['customerName'],
                 'total_harga' => $data['total'],
-                'status' => 'lunas', // Assuming lunas for now
+                'status' => $data['isDebt'] ? 'utang' : 'lunas',
             ]);
 
             // 2. Create Transaction Details & Update Stock
@@ -69,14 +71,26 @@ class TransaksiController extends Controller
                 $produk->save();
             }
 
-            // 3. Create Payment
-            Pembayaran::create([
-                'transaksi_id' => $transaksi->transaksi_id,
-                'pembayaran_metode' => $data['metodePembayaran'],
-                'pembayaran_total' => $data['total'],
-                'uang_dibayar' => $data['uangDibayar'],
-                'tgl_pembayaran' => now(),
-            ]);
+            // 3. Create Payment or Debt Record
+            if ($data['isDebt']) {
+                Hutang::create([
+                    'transaksi_id' => $transaksi->transaksi_id,
+                    'hutang_total' => $data['total'],
+                ]);
+                Pembayaran::create([
+                    'transaksi_id' => $transaksi->transaksi_id,
+                    'pembayaran_metode' => 'utang',
+                    'pembayaran_total' => $data['total'],
+                    'uang_dibayar' => 0,
+                ]);
+            } else {
+                Pembayaran::create([
+                    'transaksi_id' => $transaksi->transaksi_id,
+                    'pembayaran_metode' => $data['metodePembayaran'],
+                    'pembayaran_total' => $data['total'],
+                    'uang_dibayar' => $data['uangDibayar'],
+                ]);
+            }
         });
 
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil disimpan.');
